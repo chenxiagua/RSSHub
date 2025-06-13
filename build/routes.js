@@ -82470,6 +82470,50 @@ export default {
     "url": "strategyand.pwc.com",
     "lang": "en"
   },
+  "python": {
+    "routes": {
+      "/release": {
+        "path": "/release",
+        "name": "Active Python Releases",
+        "url": "www.python.org",
+        "maintainers": [
+          "nczitzk"
+        ],
+        "example": "/python/release",
+        "categories": [
+          "programming"
+        ],
+        "features": {
+          "requireConfig": false,
+          "requirePuppeteer": false,
+          "antiCrawler": false,
+          "supportRadar": true,
+          "supportBT": false,
+          "supportPodcast": false,
+          "supportScihub": false
+        },
+        "radar": [
+          {
+            "source": [
+              "www.python.org",
+              "www.python.org/downloads"
+            ],
+            "target": "/release"
+          }
+        ],
+        "view": 0,
+        "location": "release.ts",
+        "module": () => import('@/routes/python/release.ts')
+      }
+    },
+    "name": "Python",
+    "url": "python.org",
+    "categories": [
+      "programming"
+    ],
+    "description": "",
+    "lang": "en"
+  },
   "qbitai": {
     "routes": {
       "/category/:category": {
