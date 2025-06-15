@@ -68598,6 +68598,193 @@ export default {
     "url": "www.mixcloud.com",
     "lang": "en"
   },
+  "mixi2": {
+    "routes": {
+      "/community/:id/:media?": {
+        "path": "/community/:id/:media?",
+        "name": "コミュニティ",
+        "categories": [
+          "social-media"
+        ],
+        "example": "/mixi2/community/62e7e813-d242-4c54-a0ee-0aab5b2bbad2",
+        "parameters": {
+          "id": {
+            "description": "コミュニティID"
+          },
+          "media": {
+            "description": "`media`を入力するとメディアを含むポストのみを取得、デフォルトは空で全てのポストを取得"
+          }
+        },
+        "features": {
+          "supportRadar": true,
+          "requireConfig": [
+            {
+              "name": "MIXI2_AUTH_TOKEN",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでクッキーから `auth_token` の値を取得してください"
+            },
+            {
+              "name": "MIXI2_AUTH_KEY",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでリクエストヘッダーから `x-auth-key` の値を取得してください"
+            }
+          ]
+        },
+        "radar": [
+          {
+            "source": [
+              "mixi.social/communities/:id",
+              "mixi.social/communities/:id/about"
+            ],
+            "target": "/community/:id",
+            "title": "コミュニティ - ポスト"
+          },
+          {
+            "source": [
+              "mixi.social/communities/:id",
+              "mixi.social/communities/:id/about"
+            ],
+            "target": "/community/:id/media",
+            "title": "コミュニティ - メディア"
+          }
+        ],
+        "view": 1,
+        "maintainers": [
+          "KarasuShin"
+        ],
+        "location": "community.ts",
+        "module": () => import('@/routes/mixi2/community.ts')
+      },
+      "/discovery": {
+        "path": "/discovery",
+        "name": "発見",
+        "categories": [
+          "social-media"
+        ],
+        "example": "/mixi2/discovery",
+        "features": {
+          "supportRadar": true,
+          "requireConfig": [
+            {
+              "name": "MIXI2_AUTH_TOKEN",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでクッキーから `auth_token` の値を取得してください"
+            },
+            {
+              "name": "MIXI2_AUTH_KEY",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでリクエストヘッダーから `x-auth-key` の値を取得してください"
+            }
+          ]
+        },
+        "radar": [
+          {
+            "source": [
+              "mixi.social/home/discovery"
+            ],
+            "target": "/discovery",
+            "title": "発見"
+          }
+        ],
+        "view": 1,
+        "maintainers": [
+          "KarasuShin"
+        ],
+        "location": "discovery.ts",
+        "module": () => import('@/routes/mixi2/discovery.ts')
+      },
+      "/home": {
+        "path": "/home",
+        "name": "フォロー中",
+        "categories": [
+          "social-media"
+        ],
+        "example": "/mixi2/home",
+        "features": {
+          "requireConfig": [
+            {
+              "name": "MIXI2_AUTH_TOKEN",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでクッキーから `auth_token` の値を取得してください"
+            },
+            {
+              "name": "MIXI2_AUTH_KEY",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでリクエストヘッダーから `x-auth-key` の値を取得してください"
+            }
+          ],
+          "supportRadar": true
+        },
+        "radar": [
+          {
+            "source": [
+              "mixi.social/home"
+            ],
+            "target": "/home",
+            "title": "フォロー中"
+          }
+        ],
+        "view": 1,
+        "maintainers": [
+          "KarasuShin"
+        ],
+        "location": "home.ts",
+        "module": () => import('@/routes/mixi2/home.ts')
+      },
+      "/user/:name/:media?": {
+        "path": "/user/:name/:media?",
+        "name": "ユーザー",
+        "categories": [
+          "social-media"
+        ],
+        "example": "/mixi2/user/@deyo",
+        "parameters": {
+          "name": {
+            "description": "@で始まるユーザー名"
+          },
+          "media": {
+            "description": "`media`を入力するとメディアを含むポストのみを取得、デフォルトは空で全てのポストを取得"
+          }
+        },
+        "features": {
+          "requireConfig": [
+            {
+              "name": "MIXI2_AUTH_TOKEN",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでクッキーから `auth_token` の値を取得してください"
+            },
+            {
+              "name": "MIXI2_AUTH_KEY",
+              "description": "mixi2ログイン後の情報。ブラウザのコンソールでリクエストヘッダーから `x-auth-key` の値を取得してください"
+            }
+          ],
+          "supportRadar": true
+        },
+        "radar": [
+          {
+            "source": [
+              "mixi.social/:id"
+            ],
+            "target": "/user/:id",
+            "title": "ユーザー - ポスト"
+          },
+          {
+            "source": [
+              "mixi.social/:id"
+            ],
+            "target": "/user/:id/media",
+            "title": "ユーザー - メディア"
+          }
+        ],
+        "view": 1,
+        "maintainers": [
+          "KarasuShin"
+        ],
+        "location": "user.ts",
+        "module": () => import('@/routes/mixi2/user.ts')
+      }
+    },
+    "name": "mixi2",
+    "apiRoutes": {},
+    "url": "mixi.social",
+    "lang": "ja",
+    "categories": [
+      "social-media"
+    ]
+  },
   "modb": {
     "routes": {
       "/topic/:id": {
@@ -85949,6 +86136,63 @@ export default {
     "name": "Samsung",
     "url": "research.samsung.com",
     "lang": "en"
+  },
+  "sankei": {
+    "routes": {
+      "/news/:category": {
+        "path": "/news/:category",
+        "categories": [
+          "traditional-media"
+        ],
+        "example": "/sankei/news/flash",
+        "parameters": {
+          "category": "Category name (as it will appear in URLs). For example, for \"Breaking News\" https://www.sankei.com/flash/, the category name would be \"flash\"."
+        },
+        "radar": [
+          {
+            "source": [
+              "www.sankei.com/:category"
+            ],
+            "target": "/news/:category"
+          }
+        ],
+        "name": "News",
+        "maintainers": [
+          "yuikisaito"
+        ],
+        "location": "news.ts",
+        "module": () => import('@/routes/sankei/news.ts')
+      },
+      "/topics/:topic": {
+        "path": [
+          "/topics/:topic"
+        ],
+        "categories": [
+          "traditional-media"
+        ],
+        "example": "/sankei/topics/etc_100",
+        "parameters": {
+          "topic": "Topic name (format included in URL). For example, for \"Expo 2025 Osaka, Kansai, Japan Special Feature\" https://www.sankei.com/tag/topic/etc_100, the value would be etc_100."
+        },
+        "radar": [
+          {
+            "source": [
+              "www.sankei.com/tag/topic/:topic"
+            ],
+            "target": "/topics/:topic"
+          }
+        ],
+        "name": "Topic",
+        "maintainers": [
+          "yuikisaito"
+        ],
+        "location": "topics.ts",
+        "module": () => import('@/routes/sankei/topics.ts')
+      }
+    },
+    "name": "Sankei Shimbun 産経新聞",
+    "url": "sankei.com",
+    "lang": "ja"
   },
   "sara": {
     "routes": {
