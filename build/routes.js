@@ -24858,6 +24858,47 @@ export default {
     "url": "navi.cctv.com",
     "lang": "zh-CN"
   },
+  "cockroachlabs": {
+    "routes": {
+      "/blog/:category?": {
+        "name": "Blogs",
+        "maintainers": [
+          "CookiePieWw"
+        ],
+        "categories": [
+          "programming"
+        ],
+        "path": "/blog/:category?",
+        "example": "/cockroachlabs/blog/engineering",
+        "parameters": {
+          "category": "Blog category, e.g., engineering. Subscribe all recent articles if empty."
+        },
+        "features": {
+          "requireConfig": false,
+          "requirePuppeteer": false,
+          "antiCrawler": false,
+          "supportBT": false,
+          "supportPodcast": false,
+          "supportScihub": false
+        },
+        "radar": [
+          {
+            "source": [
+              "cockroachlabs.com/blog/:category",
+              "cockroachlabs.com/blog"
+            ],
+            "target": "/blog"
+          }
+        ],
+        "location": "blog.ts",
+        "module": () => import('@/routes/cockroachlabs/blog.ts')
+      }
+    },
+    "name": "Cockroach Labs",
+    "apiRoutes": {},
+    "url": "cockroachlabs.com",
+    "lang": "en"
+  },
   "codeforces": {
     "routes": {
       "/contests": {
@@ -63917,6 +63958,78 @@ export default {
     },
     "name": "Email",
     "apiRoutes": {},
+    "lang": "en"
+  },
+  "makerworld": {
+    "routes": {
+      "/contests": {
+        "path": "/contests",
+        "categories": [
+          "design"
+        ],
+        "example": "/makerworld/contests",
+        "name": "Contests",
+        "maintainers": [
+          "TonyRL"
+        ],
+        "radar": [
+          {
+            "source": [
+              "makerworld.com/:lang/contests"
+            ]
+          }
+        ],
+        "location": "contest.ts",
+        "module": () => import('@/routes/makerworld/contest.ts')
+      },
+      "/trending": {
+        "path": "/trending",
+        "categories": [
+          "design"
+        ],
+        "example": "/makerworld/trending",
+        "name": "Trending Models",
+        "maintainers": [
+          "TonyRL"
+        ],
+        "radar": [
+          {
+            "source": [
+              "makerworld.com/:lang"
+            ]
+          }
+        ],
+        "location": "trending.ts",
+        "module": () => import('@/routes/makerworld/trending.ts')
+      },
+      "/user/:handle/upload": {
+        "path": "/user/:handle/upload",
+        "categories": [
+          "design"
+        ],
+        "example": "/makerworld/@Wcad00/upload",
+        "parameters": {
+          "handle": "User handle"
+        },
+        "name": "User Uploads",
+        "maintainers": [
+          "TonyRL"
+        ],
+        "radar": [
+          {
+            "source": [
+              "makerworld.com/:lang/:handle/upload",
+              "makerworld.com/:lang/:handle"
+            ]
+          }
+        ],
+        "location": "user-upload.ts",
+        "module": () => import('@/routes/makerworld/user-upload.ts')
+      }
+    },
+    "name": "MakerWorld",
+    "apiRoutes": {},
+    "url": "makerworld.com",
     "lang": "en"
   },
   "malaysiakini": {

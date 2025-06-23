@@ -10580,6 +10580,20 @@
       }
     ]
   },
+  "cockroachlabs.com": {
+    "_name": "Cockroach Labs",
+    ".": [
+      {
+        "title": "Blogs",
+        "docs": "https://docs.rsshub.app/routes/programming",
+        "source": [
+          "/blog/:category",
+          "/blog"
+        ],
+        "target": "/cockroachlabs/blog"
+      }
+    ]
+  },
   "codeforces.com": {
     "_name": "Codeforces",
     "www": [
@@ -23008,6 +23022,36 @@
           "/"
         ],
         "target": "/magnumphotos/magazine"
+      }
+    ]
+  },
+  "makerworld.com": {
+    "_name": "MakerWorld",
+    ".": [
+      {
+        "title": "Contests",
+        "docs": "https://docs.rsshub.app/routes/design",
+        "source": [
+          "/:lang/contests"
+        ],
+        "target": "/makerworld/contests"
+      },
+      {
+        "title": "Trending Models",
+        "docs": "https://docs.rsshub.app/routes/design",
+        "source": [
+          "/:lang"
+        ],
+        "target": "/makerworld/trending"
+      },
+      {
+        "title": "User Uploads",
+        "docs": "https://docs.rsshub.app/routes/design",
+        "source": [
+          "/:lang/:handle/upload",
+          "/:lang/:handle"
+        ],
+        "target": "/makerworld/user/:handle/upload"
       }
     ]
   },
