@@ -1823,6 +1823,15 @@
   "/csdn/blog/:user": [
     "Jkker"
   ],
+  "/css-tricks/articles": [
+    "Rjnishant530"
+  ],
+  "/css-tricks/collections/:type": [
+    "Rjnishant530"
+  ],
+  "/css-tricks/popular": [
+    "Rjnishant530"
+  ],
   "/cssn/iolaw/:section?": [
     "HankChow"
   ],
@@ -8056,6 +8065,12 @@
   ],
   "/vimeo/user/:username/:cat?": [
     "MisteryMonster"
+  ],
+  "/visionias/dailySummary": [
+    "Rjnishant530"
+  ],
+  "/visionias/monthlyMagazine": [
+    "Rjnishant530"
   ],
   "/visionias/newsToday/:filter?": [
     "Rjnishant530"
