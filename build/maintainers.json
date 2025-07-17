@@ -5223,6 +5223,15 @@
   "/mysql/release/:version?": [
     "nczitzk"
   ],
+  "/nankai/cc/:type?": [
+    "vicguo0724"
+  ],
+  "/nankai/jwc": [
+    "vicguo0724"
+  ],
+  "/nankai/notice": [
+    "vicguo0724"
+  ],
   "/nankai/yzb/:type?": [
     "sddzhyc"
   ],
