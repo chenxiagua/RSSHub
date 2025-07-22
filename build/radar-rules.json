@@ -12286,6 +12286,27 @@
       }
     ]
   },
+  "dev.to": {
+    "_name": "DEV Community",
+    ".": [
+      {
+        "title": "Trending Guides",
+        "docs": "https://docs.rsshub.app/routes/programming",
+        "source": [
+          "/"
+        ],
+        "target": "/dev.to/guides"
+      },
+      {
+        "title": "Top Posts",
+        "docs": "https://docs.rsshub.app/routes/programming",
+        "source": [
+          "/top/:period"
+        ],
+        "target": "/dev.to/top/:period"
+      }
+    ]
+  },
   "devolverdigital.com": {
     "_name": "DevolverDigital",
     ".": [
@@ -38143,7 +38164,7 @@
     "_name": "中国石油大学（华东）",
     "jwc": [
       {
-        "title": "教务处通知公告",
+        "title": "教务处",
         "docs": "https://docs.rsshub.app/routes/university",
         "source": [
           "/",
