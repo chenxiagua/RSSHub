@@ -3370,6 +3370,9 @@
   "/gov/shenzhen/hrss/szksy/:caty/:page?": [
     "zlasd"
   ],
+  "/gov/shenzhen/szlh/zwfw/zffw/:caty": [
+    "lonn"
+  ],
   "/gov/shenzhen/xxgk/zfxxgj/:caty": [
     "laoxua"
   ],
@@ -7712,6 +7715,12 @@
   "/theverge/:hub?": [
     "HenryQW",
     "vbali"
+  ],
+  "/thewirehindi/category/:category": [
+    "Rjnishant530"
+  ],
+  "/thewirehindi/": [
+    "Rjnishant530"
   ],
   "/thoughtco/:category?": [
     "nczitzk"
