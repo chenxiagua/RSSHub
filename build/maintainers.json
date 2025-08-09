@@ -771,6 +771,9 @@
     "youyou-sudo",
     "honue"
   ],
+  "/banshujiang/:category{.+}?": [
+    "nczitzk"
+  ],
   "/banyuetan/:id?": [
     "nczitzk"
   ],
@@ -5193,6 +5196,9 @@
   "/modelscope/datasets": [
     "TonyRL"
   ],
+  "/modelscope/learn": [
+    "TonyRL"
+  ],
   "/modelscope/models": [
     "TonyRL"
   ],
@@ -5393,6 +5399,9 @@
   ],
   "/neu/news/:type": [
     "JeasonLau"
+  ],
+  "/neu/yz/:type": [
+    "paintstar"
   ],
   "/newmuseum/exhibitions": [
     "chazeon"
