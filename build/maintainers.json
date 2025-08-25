@@ -6911,6 +6911,9 @@
   "/sec-wiki/weekly": [
     "p7e4"
   ],
+  "/secretsanfrancisco/:category?": [
+    "EthanWng97"
+  ],
   "/secrss/author/:author": [
     "XinRoom",
     "SunBK201"
@@ -7708,6 +7711,9 @@
   ],
   "/thecover/channel/:id?": [
     "yuxinliu-alex"
+  ],
+  "/thegadgetflow/:category?": [
+    "EthanWng97"
   ],
   "/thegradient/posts": [
     "liyaozhong"
