@@ -225,7 +225,7 @@
     "unist-util-visit-parents": "5.1.3"
   },
   "engines": {
-    "node": ">=16"
+    "node": "22.x"
   },
   "reporters": [
     "default",
