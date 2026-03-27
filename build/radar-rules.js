@@ -4847,7 +4847,7 @@
           "/" ],
         target:"/chaincatcher/news" } ] },
   "changba.com":{ _name:"唱吧",
-    ".":[ { title:"用户",
+    ".":[ { title:"用户作品",
         docs:"https://docs.rsshub.app/routes/social-media",
         source:[ "/s/:userid" ],
         target:"/changba/:userid" } ] },
