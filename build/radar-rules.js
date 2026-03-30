@@ -4850,7 +4850,7 @@
     ".":[ { title:"用户",
         docs:"https://docs.rsshub.app/routes/social-media",
         source:[ "/s/:userid" ],
-        target:"/changba/user/:userid" } ] },
+        target:"/changba/:userid" } ] },
   "chaping.cn":{ _name:"差评",
     ".":[ { title:"快讯",
         docs:"https://docs.rsshub.app/routes/new-media",

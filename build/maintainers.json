@@ -1560,7 +1560,7 @@
   "/chaincatcher/news": [
     "TonyRL"
   ],
-  "/changba/user/:userid": [
+  "/changba/:userid": [
     "kt286",
     "xizeyoupan",
     "pseudoyu"

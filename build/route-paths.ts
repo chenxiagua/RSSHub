@@ -515,7 +515,7 @@ export type RoutePath =
   | `/cgtn/podcast/:category/:id`
   | `/chaincatcher/`
   | `/chaincatcher/news`
-  | `/changba/user/:userid`
+  | `/changba/:userid`
   | `/chaoxing/qk/:id/:needContent?`
   | `/chaping/banner`
   | `/chaping/news/:caty?`

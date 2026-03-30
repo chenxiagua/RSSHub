@@ -10368,7 +10368,7 @@
         "source": [
           "/s/:userid"
         ],
-        "target": "/changba/user/:userid"
+        "target": "/changba/:userid"
       }
     ]
   },
