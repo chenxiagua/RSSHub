@@ -10363,12 +10363,12 @@
     "_name": "唱吧",
     ".": [
       {
-        "title": "用户作品",
+        "title": "用户",
         "docs": "https://docs.rsshub.app/routes/social-media",
         "source": [
           "/s/:userid"
         ],
-        "target": "/changba/:userid"
+        "target": "/changba/user/:userid"
       }
     ]
   },
