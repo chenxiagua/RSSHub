@@ -1,4 +1,5 @@
 import { load } from 'cheerio';
+import CryptoJS from 'crypto-js';
 import { renderToString } from 'hono/jsx/dom/server';
 
 import type { Route } from '@/types';
@@ -6,6 +7,9 @@ import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { PRESETS } from '@/utils/header-generator';
+const AES_KEY = 'a17fe74e421c2cbf3dc323f4b4f3a1af';
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const route: Route = {
     path: '/:userid',
@@ -33,69 +37,74 @@ export const route: Route = {
 
 async function handler(ctx) {
     const userid = ctx.req.param('userid');
-    const url = `https://changba.com/wap/index.php?s=${userid}`;
+    const url = `https://changba.com/wap/index.php?s=${userid}`;   
     const response = await got({
         method: 'get',
         url,
-        headerGeneratorOptions: PRESETS.MODERN_IOS,
+        headers,
     });
-    const data = response.data;
-    const $ = load(data);
+    
+    const $ = load(response.data);
     const list = $('.user-work .work-info').toArray();
     const author = $('div.user-main-info > span.txt-info > a.uname').text();
     const authorimg = $('div.user-main-info > .poster > img').attr('data-src');
 
-    let items = await Promise.all(
-        list.map((item) => {
-            const $ = load(item);
-            const link = $('a').attr('href');
-            return cache.tryGet(link, async () => {
-                const result = await got({
-                    method: 'get',
-                    url: link,
-                    headerGeneratorOptions: PRESETS.MODERN_IOS,
-                });
+    const items: any[] = [];
 
-                const re = /workid: '\d+'/;
-                let workid;
-                try {
-                    workid = result.data.match(re)[0];
-                } catch {
-                    // 没有找到该作品
-                    // 这可能是由下列原因造成的：
-                    // 该作品已经被原作者删除了
-                    // 该作品包含了视频，目前正在审核中，在审核没有通过前无法被播放
-                    // 目前服务器压力太大，刚刚上传成功的作品可能需要半个小时后才能被播放
-                    return null;
-                }
+    for (const item of list) {
+        const item$ = load(item);
+        const link = item$('a').attr('href');
 
-                workid = workid.split("'")[1];
+        if (!link) continue;
 
-                if (!workid) {
-                    return null;
-                }
-                const mp3 = `https://upscuw.changba.com/${workid}.mp3`;
-                const description = renderToString(<ChangbaWorkDescription desc={$('div.des').text()} mp3url={mp3} />);
-                const itunes_item_image = $('div.work-cover').attr('style').replace(')', '').split('url(')[1];
-                return {
-                    title: $('.work-title').text(),
-                    description,
-                    link,
-                    author,
-                    itunes_item_image,
-                    enclosure_url: mp3,
-                    enclosure_type: 'audio/mpeg',
-                };
+        const cachedItem = await cache.tryGet(link, async () => {
+            await wait(500 + Math.random() * 1000);
+
+            const result = await got({
+                method: 'get',
+                url: link,
+                headers,
             });
-        })
-    );
 
-    items = items.filter(Boolean);
+            const match = result.data.match(/\benc_workpath\b\s*:\s*['"]([^'"]+)['"]/);
+
+            if (!match) {
+                return null;
+            }
+            const iv = CryptoJS.enc.Utf8.parse(AES_KEY.slice(0, 16));
+            const key = CryptoJS.enc.Utf8.parse(AES_KEY.slice(16));
+            const decrypted = CryptoJS.AES.decrypt(match[1], key, { iv, padding: CryptoJS.pad.Pkcs7 });
+            const mp3Url = decrypted.toString(CryptoJS.enc.Utf8);
+
+            if (!mp3Url) {
+                return null;
+            }
+
+            const mp3 = mp3Url.replace('http://', 'https://');
+            const description = renderToString(<ChangbaWorkDescription desc={item$('div.des').text()} mp3url={mp3} />);
+            const styleAttr = item$('div.work-cover').attr('style') || '';
+            const itunes_item_image = styleAttr.match(/url\(['"]?(.*?)['"]?\)/)?.[1];
+
+            return {
+                title: item$('.work-title').text(),
+                description,
+                link,
+                author,
+                itunes_item_image,
+                enclosure_url: mp3,
+                enclosure_type: 'audio/mpeg',
+            };
+        });
+
+        if (cachedItem) {
+            items.push(cachedItem);
+        }
+    }
 
     return {
-        title: author + ' - 唱吧',
+        title: `${author} - 唱吧`,
         link: url,
-        description: $('meta[name="description"]').attr('content') || author + ' - 唱吧',
+        description: $('meta[name="description"]').attr('content') || `${author} - 唱吧`,
         item: items,
         image: authorimg,
         itunes_author: author,
@@ -106,6 +115,6 @@ async function handler(ctx) {
 const ChangbaWorkDescription = ({ desc, mp3url }: { desc: string; mp3url: string }) => (
     <>
         <p>{desc}</p>
-        <audio id="audio" src={mp3url} preload="metadata"></audio>
+        <audio id="audio" src={mp3url} preload="metadata" controls></audio>
     </>
 );
