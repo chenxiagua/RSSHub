@@ -37,13 +37,13 @@ export const route: Route = {
 
 async function handler(ctx) {
     const userid = ctx.req.param('userid');
-    const url = `https://changba.com/wap/index.php?s=${userid}`;   
+    const url = `https://changba.com/wap/index.php?s=${userid}`;
     const response = await got({
         method: 'get',
         url,
         headers,
     });
-    
+
     const $ = load(response.data);
     const list = $('.user-work .work-info').toArray();
     const author = $('div.user-main-info > span.txt-info > a.uname').text();
