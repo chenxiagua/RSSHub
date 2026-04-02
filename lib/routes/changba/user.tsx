@@ -1,15 +1,24 @@
 import { load } from 'cheerio';
-import CryptoJS from 'crypto-js';
 import { renderToString } from 'hono/jsx/dom/server';
+import CryptoJS from 'crypto-js';
 
-import type { Route } from '@/types';
+import type { Route, DataItem, Data } from '@/types';
 import { ViewType } from '@/types';
 import cache from '@/utils/cache';
 import got from '@/utils/got';
 import { PRESETS } from '@/utils/header-generator';
-const AES_KEY = 'a17fe74e421c2cbf3dc323f4b4f3a1af';
+import { parseDate } from '@/utils/parse-date';
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const decryptUrl = (enText: string) => {
+    const key = CryptoJS.enc.Utf8.parse('v648672461426416');
+    const iv = CryptoJS.enc.Utf8.parse('1024204840968192');
+    const decrypt = CryptoJS.AES.decrypt(enText, key, {
+        iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+    });
+    return decrypt.toString(CryptoJS.enc.Utf8);
+};
 
 export const route: Route = {
     path: '/:userid',
@@ -20,7 +29,7 @@ export const route: Route = {
     features: {
         requireConfig: false,
         requirePuppeteer: false,
-        antiCrawler: false,
+        antiCrawler: true,
         supportBT: false,
         supportPodcast: true,
         supportScihub: false,
@@ -28,6 +37,7 @@ export const route: Route = {
     radar: [
         {
             source: ['changba.com/s/:userid'],
+            target: '/:userid',
         },
     ],
     name: '用户',
@@ -35,86 +45,79 @@ export const route: Route = {
     handler,
 };
 
-async function handler(ctx) {
+async function handler(ctx): Promise<Data> {
     const userid = ctx.req.param('userid');
     const url = `https://changba.com/wap/index.php?s=${userid}`;
+    
     const response = await got({
         method: 'get',
         url,
-        headers,
+        headers: {
+            Referer: 'https://changba.com/',
+        },
+        headerGeneratorOptions: PRESETS.MODERN_IOS,
     });
-
+    
     const $ = load(response.data);
     const list = $('.user-work .work-info').toArray();
     const author = $('div.user-main-info > span.txt-info > a.uname').text();
     const authorimg = $('div.user-main-info > .poster > img').attr('data-src');
 
-    const items: any[] = [];
+    const items = await Promise.all(
+        list.map((item) => {
+            const $item = load(item);
+            const link = $item('a').attr('href') || '';
+            const absoluteLink = link.startsWith('http') ? link : `https://changba.com${link}`;
 
-    for (const item of list) {
-        const item$ = load(item);
-        const link = item$('a').attr('href');
+            return cache.tryGet(absoluteLink, async () => {
+                const result = await got({
+                    method: 'get',
+                    url: absoluteLink,
+                    headers: {
+                        Referer: url,
+                    },
+                    headerGeneratorOptions: PRESETS.MODERN_IOS,
+                });
 
-        if (!link) continue;
+                const enWorkUrlMatch = result.data.match(/workurl:\s*["'](.+?)["']/);
+                if (!enWorkUrlMatch) {
+                    return {};
+                }
 
-        const cachedItem = await cache.tryGet(link, async () => {
-            await wait(500 + Math.random() * 1000);
+                const mp3 = decryptUrl(enWorkUrlMatch[1]);
+                const $detail = load(result.data);
+                const timeText = $detail('.work-info .time').text();
 
-            const result = await got({
-                method: 'get',
-                url: link,
-                headers,
-            });
-
-            const match = result.data.match(/\benc_workpath\b\s*:\s*['"]([^'"]+)['"]/);
-
-            if (!match) {
-                return null;
-            }
-            const iv = CryptoJS.enc.Utf8.parse(AES_KEY.slice(0, 16));
-            const key = CryptoJS.enc.Utf8.parse(AES_KEY.slice(16));
-            const decrypted = CryptoJS.AES.decrypt(match[1], key, { iv, padding: CryptoJS.pad.Pkcs7 });
-            const mp3Url = decrypted.toString(CryptoJS.enc.Utf8);
-
-            if (!mp3Url) {
-                return null;
-            }
-
-            const mp3 = mp3Url.replace('http://', 'https://');
-            const description = renderToString(<ChangbaWorkDescription desc={item$('div.des').text()} mp3url={mp3} />);
-            const styleAttr = item$('div.work-cover').attr('style') || '';
-            const itunes_item_image = styleAttr.match(/url\(['"]?(.*?)['"]?\)/)?.[1];
-
-            return {
-                title: item$('.work-title').text(),
-                description,
-                link,
-                author,
-                itunes_item_image,
-                enclosure_url: mp3,
-                enclosure_type: 'audio/mpeg',
-            };
-        });
-
-        if (cachedItem) {
-            items.push(cachedItem);
-        }
-    }
+                const dataItem: DataItem = {
+                    title: $detail('.work-title').text(),
+                    description: renderToString(<ChangbaWorkDescription desc={$detail('div.des').text()} mp3url={mp3} />),
+                    link: absoluteLink,
+                    author,
+                    enclosure_url: mp3,
+                    enclosure_type: 'audio/mpeg',
+                    pubDate: timeText ? parseDate(timeText) : undefined,
+                };
+                return dataItem;
+            }) as Promise<DataItem>;
+        })
+    );
 
     return {
         title: `${author} - 唱吧`,
         link: url,
         description: $('meta[name="description"]').attr('content') || `${author} - 唱吧`,
-        item: items,
+        item: items.filter((i): i is DataItem => i && Object.keys(i).length > 0),
         image: authorimg,
         itunes_author: author,
         itunes_category: '唱吧',
     };
 }
 
-const ChangbaWorkDescription = ({ desc, mp3url }: { desc: string; mp3url: string }) => (
-    <>
-        <p>{desc}</p>
-        <audio id="audio" src={mp3url} preload="metadata" controls></audio>
-    </>
-);
+function ChangbaWorkDescription({ desc, mp3url }: { desc: string; mp3url: string }) {
+    return (
+        <>
+            <p>{desc}</p>
+            <audio src={mp3url} controls preload="metadata" referrerPolicy="no-referrer"></audio>
+        </>
+    );
+}
