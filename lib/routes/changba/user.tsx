@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
-import { renderToString } from 'hono/jsx/dom/server';
 import CryptoJS from 'crypto-js';
+import { renderToString } from 'hono/jsx/dom/server';
 
 import type { Route, DataItem, Data } from '@/types';
 import { ViewType } from '@/types';
@@ -48,7 +48,7 @@ export const route: Route = {
 async function handler(ctx): Promise<Data> {
     const userid = ctx.req.param('userid');
     const url = `https://changba.com/wap/index.php?s=${userid}`;
-    
+
     const response = await got({
         method: 'get',
         url,
@@ -57,7 +57,7 @@ async function handler(ctx): Promise<Data> {
         },
         headerGeneratorOptions: PRESETS.MODERN_IOS,
     });
-    
+
     const $ = load(response.data);
     const list = $('.user-work .work-info').toArray();
     const author = $('div.user-main-info > span.txt-info > a.uname').text();
